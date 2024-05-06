@@ -1,0 +1,121 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: "pen-font";
+  src: url("/fonts/helena-signature.ttf");
+  /* weight: 400; */
+}
+
+body {
+  height: 100dvh;
+  background-image: url("/images/fondo-web.jpg");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  font-family: "pen-font";
+}
+
+.pen-font {
+  font-family: "pen-font";
+}
+
+.ant-upload-btn {
+  padding: 32px 16px !important;
+}
+.ant-upload-drag {
+  background: rgb(177 177 177 / 45%) !important;
+  border: 1px solid #00000024 !important;
+}
+
+.ant-upload-drag svg {
+  height: 60px;
+}
+
+.upload-list-inline .ant-upload-list-item {
+  float: left;
+  width: 200px;
+  margin-inline-end: 8px;
+}
+
+.ant-upload-rtl.upload-list-inline .ant-upload-list-item {
+  float: right;
+}
+
+.ant-upload-list-item-container {
+  width: auto !important;
+  height: 140px !important;
+}
+
+.ant-upload-list-picture-card {
+  margin-top: 1rem;
+  justify-content: center;
+}
+
+:where(
+    .css-dev-only-do-not-override-11xg00t
+  ).ant-upload-wrapper.ant-upload-picture-card-wrapper
+  .ant-upload-list.ant-upload-list-picture-card
+  .ant-upload-list-item::before {
+  background-color: rgba(139, 139, 139, 0.383) !important;
+}
+
+:where(
+    .css-dev-only-do-not-override-11xg00t
+  ).ant-upload-wrapper.ant-upload-picture-card-wrapper
+  .ant-upload-list.ant-upload-list-picture-card
+  .ant-upload-list-item-thumbnail,
+:where(
+    .css-dev-only-do-not-override-11xg00t
+  ).ant-upload-wrapper.ant-upload-picture-circle-wrapper
+  .ant-upload-list.ant-upload-list-picture-card
+  .ant-upload-list-item-thumbnail,
+:where(
+    .css-dev-only-do-not-override-11xg00t
+  ).ant-upload-wrapper.ant-upload-picture-card-wrapper
+  .ant-upload-list.ant-upload-list-picture-circle
+  .ant-upload-list-item-thumbnail,
+:where(
+    .css-dev-only-do-not-override-11xg00t
+  ).ant-upload-wrapper.ant-upload-picture-circle-wrapper
+  .ant-upload-list.ant-upload-list-picture-circle
+  .ant-upload-list-item-thumbnail,
+:where(
+    .css-dev-only-do-not-override-11xg00t
+  ).ant-upload-wrapper.ant-upload-picture-card-wrapper
+  .ant-upload-list.ant-upload-list-picture-card
+  .ant-upload-list-item-thumbnail
+  img,
+:where(
+    .css-dev-only-do-not-override-11xg00t
+  ).ant-upload-wrapper.ant-upload-picture-circle-wrapper
+  .ant-upload-list.ant-upload-list-picture-card
+  .ant-upload-list-item-thumbnail
+  img,
+:where(
+    .css-dev-only-do-not-override-11xg00t
+  ).ant-upload-wrapper.ant-upload-picture-card-wrapper
+  .ant-upload-list.ant-upload-list-picture-circle
+  .ant-upload-list-item-thumbnail
+  img,
+:where(
+    .css-dev-only-do-not-override-11xg00t
+  ).ant-upload-wrapper.ant-upload-picture-circle-wrapper
+  .ant-upload-list.ant-upload-list-picture-circle
+  .ant-upload-list-item-thumbnail
+  img {
+  object-fit: cover !important;
+}
+
+:where(.css-dev-only-do-not-override-11xg00t).ant-upload-wrapper
+  .ant-upload-list.ant-upload-list-picture-card
+  .ant-upload-list-item {
+  padding: 12px !important;
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
