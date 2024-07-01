@@ -1,3 +1,5 @@
+@import "~react-image-gallery/styles/css/image-gallery.css";
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -8,35 +10,65 @@
   /* weight: 400; */
 }
 
+@font-face {
+  font-family: "dancing-script";
+  src: url("/fonts/DancingScript-Regular.ttf");
+  /* weight: 400; */
+}
+
 body {
   height: 100dvh;
   background-image: url("/images/fondo-web.jpg");
   background-position: center;
-  background-repeat: no-repeat;
+  background-repeat: repeat;
   background-size: cover;
   font-family: "pen-font";
+}
+
+.upload-button {
+  margin-top: 1rem;
+
+  &[disabled] {
+    background-color: rgb(213 213 213 / 58%);
+    color: rgba(0, 0, 0, 0.25);
+    border-color: #d9d9d9;
+  }
+
+  &:not([disabled]) {
+    background-color: rgba(223, 196, 255, 0.62);
+    color: rgb(0, 0, 0);
+    box-shadow: 0.25rem 0.25rem 0.25rem 0px rgb(161 161 161 / 46%);
+
+    &:hover {
+      background-color: rgba(135 55 231 / 84%) !important;
+    }
+  }
 }
 
 .pen-font {
   font-family: "pen-font";
 }
 
+.subtitle {
+  font-family: "dancing-script";
+}
+
 .ant-upload-btn {
-  padding: 32px 16px !important;
+  padding: 2rem 1rem !important;
 }
 .ant-upload-drag {
   background: rgb(177 177 177 / 45%) !important;
-  border: 1px solid #00000024 !important;
+  border: 0.0625rem solid #00000024 !important;
 }
 
 .ant-upload-drag svg {
-  height: 60px;
+  height: 3.75rem;
 }
 
 .upload-list-inline .ant-upload-list-item {
   float: left;
-  width: 200px;
-  margin-inline-end: 8px;
+  width: 13.75rem;
+  margin-inline-end: 0.5rem;
 }
 
 .ant-upload-rtl.upload-list-inline .ant-upload-list-item {
@@ -45,7 +77,7 @@ body {
 
 .ant-upload-list-item-container {
   width: auto !important;
-  height: 140px !important;
+  height: 13.125rem !important;
 }
 
 .ant-upload-list-picture-card {
@@ -111,7 +143,86 @@ body {
 :where(.css-dev-only-do-not-override-11xg00t).ant-upload-wrapper
   .ant-upload-list.ant-upload-list-picture-card
   .ant-upload-list-item {
-  padding: 12px !important;
+  padding: 0.75rem 0.75rem 2.5rem 0.75rem !important;
+}
+
+.stored-image {
+  width: 12.5rem !important;
+}
+
+.ant-upload-list-item-actions,
+.ant-upload-list-item-action {
+  opacity: 1 !important;
+}
+
+.ant-upload-list-item-actions {
+  position: absolute;
+  bottom: 0.5rem;
+  gap: 2rem;
+  display: flex;
+  justify-content: center;
+
+  span {
+    color: #383838 !important;
+    font-size: 1.125rem !important;
+    width: 1.125rem !important;
+  }
+}
+
+:where(
+    .css-dev-only-do-not-override-11xg00t
+  ).ant-upload-wrapper.ant-upload-picture-card-wrapper
+  .ant-upload-list.ant-upload-list-picture-card
+  .ant-upload-list-item:hover::before {
+  opacity: 0 !important;
+}
+
+.ant-upload-list-item {
+  position: relative;
+}
+
+.gallery {
+  max-width: 56.25rem;
+  margin: 0 auto;
+}
+.gallery__item img {
+  width: 100%;
+}
+
+.toolbar-wrapper {
+  position: fixed;
+  bottom: 2rem;
+  left: 50%;
+  padding: 0rem 1.5rem;
+  color: #fff;
+  font-size: 20px;
+  background-color: rgba(0, 0, 0, 0.1);
+  border-radius: 6.25rem;
+  transform: translateX(-50%);
+}
+
+.toolbar-wrapper .anticon {
+  padding: 0.75rem;
+  cursor: pointer;
+}
+
+.toolbar-wrapper .anticon[disabled] {
+  cursor: not-allowed;
+  opacity: 0.3;
+}
+
+.toolbar-wrapper .anticon:hover {
+  opacity: 0.3;
+}
+
+:where(.css-dev-only-do-not-override-11xg00t) .ant-image-preview-footer {
+  display: none;
+}
+
+@media (max-width: 640px) {
+  .stored-image {
+    width: 120px !important;
+  }
 }
 
 @layer utilities {

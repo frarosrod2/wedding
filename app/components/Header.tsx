@@ -3,14 +3,20 @@
 import { Button, message, Upload, Modal, Spin, Image } from "antd";
 import { PlusCircleOutlined, LoadingOutlined } from "@ant-design/icons";
 import type { GetProp, UploadFile, UploadProps } from "antd";
-import { useState } from "react";
+import { startTransition, useCallback, useEffect, useState } from "react";
 import { getBase64 } from "../utils/images";
+import { Image as ImageModel } from "../interfaces/Image";
+import { getAllImages } from "../actions/get-all-images";
+import { useRouter } from "next/navigation";
+import { Images } from "./Images";
 
 const { Dragger } = Upload;
 
 export type FileType = Parameters<GetProp<UploadProps, "beforeUpload">>[0];
 
-export const Header = () => {
+export const Header = ({ images }: { images: ImageModel[] }) => {
+  const router = useRouter();
+
   const [fileList, setFileList] = useState<UploadFile[]>([]);
   const [isUploading, setIsUploading] = useState(false);
   const [previewOpen, setPreviewOpen] = useState(false);
@@ -37,19 +43,27 @@ export const Header = () => {
     fileList.forEach((file) => {
       formData.append("files[]", file.originFileObj as File);
     });
-    setFileList([]);
     setIsUploading(true);
     fetch("api/upload", {
       method: "POST",
       body: formData,
     })
       .then((res) => res.json())
-      .then(() => {
-        setFileList([]);
-        message.success("Imagen/es subida/s correctamente");
+      .then((res) => {
+        if (res.ok) {
+          setFileList([]);
+          startTransition(() => {
+            // Refresh the current route and fetch new data from the server without
+            // losing client-side browser or React state.
+            router.refresh();
+          });
+          message.success(res.message);
+        } else {
+          message.error(res.message);
+        }
       })
       .catch(() => {
-        message.error("Ha habido un error");
+        message.error("Ha ocurrido un error");
       })
       .finally(() => {
         setIsUploading(false);
@@ -75,7 +89,13 @@ export const Header = () => {
         <h1 className="pen-font text-7xl text-center animate-slide-out-bottom">
           Jesús & Noemí
         </h1>
-        <div className="text-center mt-32 px-12 sm:px-28 lg:px-60">
+        <h2 className="text-3xl text-center mt-16 subtitle">
+          Bienvenidos a nuestra boda
+        </h2>
+        <h2 className="text-2xl text-center mt-4 subtitle">
+          10 de agosto de 2024
+        </h2>
+        <div className="text-center mt-16 px-12 sm:px-28 lg:px-60">
           <Dragger
             {...props}
             listType="picture-card"
@@ -87,7 +107,7 @@ export const Header = () => {
             <p className="ant-upload-drag-icon">
               <PlusCircleOutlined
                 className="h-16"
-                style={{ fontSize: "48px", color: "rgb(0 67 116)" }}
+                style={{ fontSize: "3rem", color: "#6f4186" }}
               />
             </p>
             <p className="ant-upload-text font-semibold">
@@ -95,20 +115,17 @@ export const Header = () => {
             </p>
           </Dragger>
           <Button
+            className="upload-button"
             type="primary"
             onClick={handleUpload}
             disabled={fileList.length === 0}
             loading={isUploading}
-            style={{
-              marginTop: 16,
-              background: "rgba(191, 191, 191, 0.62)",
-              color: "rgba(0, 0, 0,0.77)",
-            }}
           >
             {isUploading ? "Subiendo" : "Subir imágenes"}
           </Button>
         </div>
       </div>
+      {images && <Images images={images} />}
       {previewImage && (
         <Image
           wrapperStyle={{ display: "none" }}

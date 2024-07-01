@@ -1,9 +1,18 @@
-import { Header } from "./components/Header";
+export const revalidate = 0;
 
-export default function Home() {
+import { getAllImages } from "./actions/get-all-images";
+import { Header } from "./components/Header";
+import { Image } from "./interfaces/Image";
+
+export default async function Home() {
+  const images: Image[] = await getAllImages().catch((err) => {
+    console.log(err);
+    return [];
+  });
+
   return (
     <main className="h-full">
-      <Header />
+      <Header images={images} />
     </main>
   );
 }
