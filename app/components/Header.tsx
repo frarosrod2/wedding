@@ -135,6 +135,7 @@ export const Header = ({ images }: { images: ImageModel[] }) => {
             afterOpenChange: (visible) => !visible && setPreviewImage(""),
           }}
           src={previewImage}
+          alt="Preview image"
         />
       )}
     </>

@@ -15,7 +15,7 @@ export const Images = ({ images }: { images: ImageModel[] }) => {
   const [index, setIndex] = useState<number>();
 
   const onDownload = () => {
-    if (!index) return;
+    if (index == null) return;
     const selectedImage = images[index];
     fetch(selectedImage?.url)
       .then((response) => response.blob())
@@ -29,16 +29,6 @@ export const Images = ({ images }: { images: ImageModel[] }) => {
         URL.revokeObjectURL(url);
         link.remove();
       });
-  };
-
-  const onTouchStart = () => {
-    console.log("SWIPE");
-  };
-  const onTouchMove = () => {
-    console.log("MOVE");
-  };
-  const onTouchEnd = () => {
-    console.log("END");
   };
 
   return (
@@ -85,7 +75,12 @@ export const Images = ({ images }: { images: ImageModel[] }) => {
         }}
       >
         {images?.map(({ id, url, date }) => (
-          <Image className="stored-image" src={url} key={id} />
+            <Image
+              alt="Stored image"
+              className="stored-image"
+              src={url}
+              key={id}
+            />
         ))}
       </Image.PreviewGroup>
     </div>

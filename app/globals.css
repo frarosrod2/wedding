@@ -167,6 +167,10 @@ body {
     font-size: 1.125rem !important;
     width: 1.125rem !important;
   }
+
+  svg {
+    fill: #6f4186;
+  }
 }
 
 :where(
@@ -217,6 +221,12 @@ body {
 
 :where(.css-dev-only-do-not-override-11xg00t) .ant-image-preview-footer {
   display: none;
+}
+
+:where(.css-p8b6i).ant-upload-wrapper.ant-upload-picture-card-wrapper
+  .ant-upload-list.ant-upload-list-picture-card
+  .ant-upload-list-item:hover::before {
+  opacity: 0 !important;
 }
 
 @media (max-width: 640px) {
