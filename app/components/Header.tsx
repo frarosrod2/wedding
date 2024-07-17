@@ -85,16 +85,18 @@ export const Header = ({ images }: { images: ImageModel[] }) => {
 
   return (
     <>
-      <div className="pt-20">
-        <h1 className="pen-font text-7xl text-center animate-slide-out-bottom">
-          Jesús & Noemí
-        </h1>
-        <h2 className="text-3xl text-center mt-16 subtitle">
-          Bienvenidos a nuestra boda
-        </h2>
-        <h2 className="text-2xl text-center mt-4 subtitle">
-          10 de agosto de 2024
-        </h2>
+      <div className="pt-16">
+        <section className="px-2">
+          <h1 className="pen-font text-7xl text-center animate-slide-out-bottom names">
+            Jesús <span className="ampersand">&</span> Noemí
+          </h1>
+          <h2 className="text-3xl text-center mt-16 subtitle">
+            Bienvenidos a nuestra boda
+          </h2>
+          <h2 className="text-2xl text-center mt-4 subtitle">
+            10 de agosto de 2024
+          </h2>
+        </section>
         <div className="text-center mt-16 px-12 sm:px-28 lg:px-60">
           <Dragger
             {...props}

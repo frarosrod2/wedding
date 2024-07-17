@@ -18,6 +18,7 @@
 
 body {
   height: 100dvh;
+  width: 100dvw;
   background-image: url("/images/fondo-web.jpg");
   background-position: center;
   background-repeat: repeat;
@@ -47,6 +48,21 @@ body {
 
 .pen-font {
   font-family: "pen-font";
+}
+
+.names {
+  white-space: nowrap;
+}
+
+.names .ampersand {
+  display: inline-block;
+  text-align: center;
+}
+
+@media (max-width: 600px) {
+  .names .ampersand {
+    display: block;
+  }
 }
 
 .subtitle {
