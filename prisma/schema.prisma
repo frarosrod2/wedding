@@ -17,4 +17,5 @@ model Image {
   id   Int      @id @default(autoincrement())
   url  String
   date DateTime
+  totalVotes   Int   @default(0)
 }

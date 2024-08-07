@@ -162,8 +162,21 @@ body {
   padding: 0.75rem 0.75rem 2.5rem 0.75rem !important;
 }
 
-.stored-image {
+.image-cont {
   width: 12.5rem !important;
+}
+
+.votes-cont {
+  margin: auto auto 0 auto;
+  font-size: 20px;
+}
+
+.ant-image {
+  margin-top: auto;
+}
+
+.heart-filled {
+  color: #c80000 !important;
 }
 
 .ant-upload-list-item-actions,
@@ -246,8 +259,9 @@ body {
 }
 
 @media (max-width: 640px) {
-  .stored-image {
+  .image-cont {
     width: 120px !important;
+    /* height: 400px !important; */
   }
 }
 

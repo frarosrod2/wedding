@@ -1,26 +1,31 @@
 "use client";
 
 import { Button, message, Upload, Modal, Spin, Image } from "antd";
-import { PlusCircleOutlined, LoadingOutlined } from "@ant-design/icons";
+import {
+  PlusCircleOutlined,
+} from "@ant-design/icons";
 import type { GetProp, UploadFile, UploadProps } from "antd";
 import { startTransition, useCallback, useEffect, useState } from "react";
 import { getBase64 } from "../utils/images";
 import { Image as ImageModel } from "../interfaces/Image";
-import { getAllImages } from "../actions/get-all-images";
 import { useRouter } from "next/navigation";
 import { Images } from "./Images";
+import { getAllImages } from "../actions/get-all-images";
+import { vote } from "../actions/vote";
 
 const { Dragger } = Upload;
 
 export type FileType = Parameters<GetProp<UploadProps, "beforeUpload">>[0];
 
-export const Header = ({ images }: { images: ImageModel[] }) => {
+export const Header = () => {
   const router = useRouter();
 
   const [fileList, setFileList] = useState<UploadFile[]>([]);
   const [isUploading, setIsUploading] = useState(false);
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState("");
+  const [images, setImages] = useState<ImageModel[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   const props: UploadProps = {
     multiple: true,
@@ -31,11 +36,29 @@ export const Header = ({ images }: { images: ImageModel[] }) => {
       setFileList(newFileList);
     },
     beforeUpload: (file) => {
-      console.log({ file: file });
       setFileList([...fileList, file]);
 
       return false;
     },
+  };
+
+  useEffect(() => {
+    console.log("EEE");
+    fetchImages();
+  }, []);
+
+  const fetchImages = () => {
+    getAllImages()
+      .then((images: ImageModel[]) => {
+        setIsLoading(false);
+        console.log(images);
+        setImages(images);
+      })
+      .catch((err) => {
+        setIsLoading(false);
+        console.log(err);
+        return [];
+      });
   };
 
   const handleUpload = () => {
@@ -58,6 +81,7 @@ export const Header = ({ images }: { images: ImageModel[] }) => {
             router.refresh();
           });
           message.success(res.message);
+          fetchImages();
         } else {
           message.error(res.message);
         }
@@ -82,6 +106,17 @@ export const Header = ({ images }: { images: ImageModel[] }) => {
     setPreviewImage(file.url || (file.preview as string));
     setPreviewOpen(true);
   };
+
+  async function handleLike(imageId: number, isSum: boolean) {
+    await vote(imageId, isSum)
+      .then((_) => {
+        fetchImages();
+      })
+      .catch((error) => {
+        console.log(error);
+        message.error("Error al votar");
+      });
+  }
 
   return (
     <>
@@ -127,7 +162,12 @@ export const Header = ({ images }: { images: ImageModel[] }) => {
           </Button>
         </div>
       </div>
-      {images && <Images images={images} />}
+      {isLoading && (
+        <span className="flex mt-20 justify-center pb-10">Cargando...</span>
+      )}
+      {!isLoading && images && (
+        <Images images={images} handleLike={handleLike} />
+      )}
       {previewImage && (
         <Image
           wrapperStyle={{ display: "none" }}

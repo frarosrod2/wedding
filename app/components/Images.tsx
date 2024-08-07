@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Image as ImageModel } from "../interfaces/Image";
 import { Image, Space } from "antd";
 import {
@@ -9,10 +9,24 @@ import {
   SwapOutlined,
   ZoomInOutlined,
   ZoomOutOutlined,
+  HeartOutlined,
+  HeartFilled,
 } from "@ant-design/icons";
 
-export const Images = ({ images }: { images: ImageModel[] }) => {
+export const Images = ({
+  images,
+  handleLike,
+}: {
+  images: ImageModel[];
+  handleLike: (imageId: number, isSum: boolean) => void;
+}) => {
   const [index, setIndex] = useState<number>();
+  const [userVotes, setUserVotes] = useState<string[]>([]);
+
+  useEffect(() => {
+    const userVotesJSON = localStorage.getItem("votes") ?? "[]";
+    setUserVotes(JSON.parse(userVotesJSON));
+  }, [images]);
 
   const onDownload = () => {
     if (index == null) return;
@@ -31,8 +45,28 @@ export const Images = ({ images }: { images: ImageModel[] }) => {
       });
   };
 
+  const onIconClick = (imageId: number, isSum: boolean) => {
+    const selectedImage = isImageVoted(imageId);
+    if (!!selectedImage) {
+      const leftVotes =
+        userVotes?.filter((votedImageId) => +votedImageId !== +imageId) ?? [];
+      localStorage.setItem("votes", JSON.stringify(leftVotes));
+    } else {
+      const userVotesClone = [...userVotes];
+      userVotesClone.push(String(imageId));
+      localStorage.setItem("votes", JSON.stringify([...userVotesClone]));
+    }
+    handleLike(imageId, isSum);
+  };
+
+  const isImageVoted = (imageId: number): string | null => {
+    return (
+      userVotes?.find((votedImageId) => +votedImageId === +imageId) ?? null
+    );
+  };
+
   return (
-    <div className="flex justify-evenly flex-wrap items-center gap-y-12 gap-x-5 sm:gap-x-8 mt-20 pb-20 px-4 sm:px-8 lg:px-20">
+    <div className="flex justify-evenly flex-wrap items-stretch gap-y-12 gap-x-5 sm:gap-x-8 mt-20 mb-10 pb-20 px-4 sm:px-8 lg:px-20">
       <Image.PreviewGroup
         preview={{
           destroyOnClose: true,
@@ -74,13 +108,21 @@ export const Images = ({ images }: { images: ImageModel[] }) => {
           ),
         }}
       >
-        {images?.map(({ id, url, date }) => (
-            <Image
-              alt="Stored image"
-              className="stored-image"
-              src={url}
-              key={id}
-            />
+        {images?.map(({ id, url, date, totalVotes }) => (
+          <div className="flex flex-col gap-3 image-cont" key={id}>
+            <Image alt="Stored image" className="image-stored" src={url} />
+            <span className="flex gap-3 votes-cont">
+              <span>{totalVotes ?? 0}</span>
+              {isImageVoted(id) ? (
+                <HeartFilled
+                  className="heart-filled"
+                  onClick={() => onIconClick(id, false)}
+                />
+              ) : (
+                <HeartOutlined onClick={() => onIconClick(id, true)} />
+              )}
+            </span>
+          </div>
         ))}
       </Image.PreviewGroup>
     </div>
