@@ -7,7 +7,7 @@ export const getAllImages = async () => {
   try {
     return await prisma.image.findMany({
       orderBy: {
-        totalVotes: "desc",
+        id: "desc",
       },
     });
   } catch (error) {
