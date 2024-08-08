@@ -1,17 +1,17 @@
 "use server";
 
 import prisma from "@/lib/prisma";
-import { Image } from "../interfaces/Image";
 
-export const getAllImages = async () => {
+export const getAllImages = async (sortBy: string) => {
+  console.log({ sortBy });
   try {
     return await prisma.image.findMany({
       orderBy: {
-        totalVotes: "desc",
+        [sortBy ?? "date"]: "desc",
       },
     });
   } catch (error) {
     console.log(error);
-    throw new Error("Error al obtener producto por slug");
+    throw new Error("Error al obtener imagenes");
   }
 };

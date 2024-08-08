@@ -1,9 +1,7 @@
 "use client";
 
-import { Button, message, Upload, Modal, Spin, Image } from "antd";
-import {
-  PlusCircleOutlined,
-} from "@ant-design/icons";
+import { Button, message, Upload, Modal, Spin, Image, Select } from "antd";
+import { PlusCircleOutlined } from "@ant-design/icons";
 import type { GetProp, UploadFile, UploadProps } from "antd";
 import { startTransition, useCallback, useEffect, useState } from "react";
 import { getBase64 } from "../utils/images";
@@ -26,6 +24,7 @@ export const Header = () => {
   const [previewImage, setPreviewImage] = useState("");
   const [images, setImages] = useState<ImageModel[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [sortBy, setSortBy] = useState("date");
 
   const props: UploadProps = {
     multiple: true,
@@ -43,12 +42,11 @@ export const Header = () => {
   };
 
   useEffect(() => {
-    console.log("EEE");
-    fetchImages();
+    fetchImages(sortBy);
   }, []);
 
-  const fetchImages = () => {
-    getAllImages()
+  const fetchImages = (sortBy: string) => {
+    getAllImages(sortBy)
       .then((images: ImageModel[]) => {
         setIsLoading(false);
         console.log(images);
@@ -81,7 +79,7 @@ export const Header = () => {
             router.refresh();
           });
           message.success(res.message);
-          fetchImages();
+          fetchImages(sortBy);
         } else {
           message.error(res.message);
         }
@@ -110,13 +108,18 @@ export const Header = () => {
   async function handleLike(imageId: number, isSum: boolean) {
     await vote(imageId, isSum)
       .then((_) => {
-        fetchImages();
+        fetchImages(sortBy);
       })
       .catch((error) => {
         console.log(error);
         message.error("Error al votar");
       });
   }
+
+  const handleSort = (sortBy: string) => {
+    setSortBy(sortBy);
+    fetchImages(sortBy);
+  };
 
   return (
     <>
@@ -166,7 +169,21 @@ export const Header = () => {
         <span className="flex mt-20 justify-center pb-10">Cargando...</span>
       )}
       {!isLoading && images && (
-        <Images images={images} handleLike={handleLike} />
+        <>
+          <div className="flex justify-end items-center mt-10 px-6 sm:px-12 lg:px-24">
+            <span>Ordenar por:&nbsp;</span>
+            <Select
+              defaultValue="date"
+              style={{ width: 120 }}
+              onChange={handleSort}
+              options={[
+                { value: "date", label: "Fecha" },
+                { value: "totalVotes", label: "Likes" },
+              ]}
+            />
+          </div>
+          <Images images={images} handleLike={handleLike} />
+        </>
       )}
       {previewImage && (
         <Image

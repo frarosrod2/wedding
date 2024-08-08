@@ -1,9 +1,10 @@
+"use client";
+
 import React, { useEffect, useState } from "react";
 import { Image as ImageModel } from "../interfaces/Image";
 import { Image, Space } from "antd";
 import {
   DownloadOutlined,
-  UndoOutlined,
   RotateLeftOutlined,
   RotateRightOutlined,
   SwapOutlined,
@@ -22,8 +23,10 @@ export const Images = ({
 }) => {
   const [index, setIndex] = useState<number>();
   const [userVotes, setUserVotes] = useState<string[]>([]);
+  const [tempImages, setTempImages] = useState<ImageModel[]>([]);
 
   useEffect(() => {
+    setTempImages(images);
     const userVotesJSON = localStorage.getItem("votes") ?? "[]";
     setUserVotes(JSON.parse(userVotesJSON));
   }, [images]);
@@ -46,24 +49,38 @@ export const Images = ({
   };
 
   const onIconClick = (imageId: number, isSum: boolean) => {
-    const selectedImage = isImageVoted(imageId);
-    if (!!selectedImage) {
+    const isVoted = isImageVoted(imageId);
+    if (!!isVoted) {
       const leftVotes =
         userVotes?.filter((votedImageId) => +votedImageId !== +imageId) ?? [];
+      setUserVotes(leftVotes);
       localStorage.setItem("votes", JSON.stringify(leftVotes));
     } else {
       const userVotesClone = [...userVotes];
       userVotesClone.push(String(imageId));
+      setUserVotes(userVotesClone);
       localStorage.setItem("votes", JSON.stringify([...userVotesClone]));
     }
+    setTempImages(
+      tempImages.map((tempImg) => {
+        if (tempImg.id === imageId) {
+          return {
+            ...tempImg,
+            totalVotes: isSum ? tempImg.totalVotes + 1 : tempImg.totalVotes - 1,
+          };
+        }
+        return tempImg;
+      })
+    );
     handleLike(imageId, isSum);
   };
 
-  const isImageVoted = (imageId: number): string | null => {
-    return (
-      userVotes?.find((votedImageId) => +votedImageId === +imageId) ?? null
-    );
-  };
+  function isImageVoted(imageId: number): boolean | null {
+    console.log({ userVotes });
+    return userVotes && Array.isArray(userVotes)
+      ? !!userVotes.find((votedImageId) => +votedImageId === +imageId) ?? null
+      : null;
+  }
 
   return (
     <div className="flex justify-evenly flex-wrap items-stretch gap-y-12 gap-x-5 sm:gap-x-8 mt-20 mb-10 pb-20 px-4 sm:px-8 lg:px-20">
@@ -76,11 +93,9 @@ export const Images = ({
             current: number
           ) => {
             setIndex(current);
-            console.log({ current });
           },
           onChange: (current, prev) => {
             setIndex(current);
-            console.log(`current index: ${current}, prev index: ${prev}`);
           },
           toolbarRender: (
             _,
@@ -108,7 +123,7 @@ export const Images = ({
           ),
         }}
       >
-        {images?.map(({ id, url, date, totalVotes }) => (
+        {tempImages?.map(({ id, url, date, totalVotes }) => (
           <div className="flex flex-col gap-3 image-cont" key={id}>
             <Image alt="Stored image" className="image-stored" src={url} />
             <span className="flex gap-3 votes-cont">
