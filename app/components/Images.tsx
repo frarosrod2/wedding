@@ -82,6 +82,14 @@ export const Images = ({
       : null;
   }
 
+  function optimizeUrl(url: string) {
+    if (url.includes("upload/")) {
+      const splitted = url.split("upload/");
+      return splitted[0] + "upload/f_auto/" + splitted[1];
+    }
+    return url;
+  }
+
   return (
     <div className="flex justify-evenly flex-wrap items-stretch gap-y-12 gap-x-5 sm:gap-x-8 mt-20 mb-10 pb-20 px-4 sm:px-8 lg:px-20">
       <Image.PreviewGroup
@@ -125,7 +133,11 @@ export const Images = ({
       >
         {tempImages?.map(({ id, url, date, totalVotes }) => (
           <div className="flex flex-col gap-3 image-cont" key={id}>
-            <Image alt="Stored image" className="image-stored" src={url} />
+            <Image
+              alt="Stored image"
+              className="image-stored"
+              src={optimizeUrl(url)}
+            />
             <span className="flex gap-3 votes-cont">
               <span>{totalVotes ?? 0}</span>
               {isImageVoted(id) ? (
